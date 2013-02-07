@@ -3,7 +3,7 @@ module GetPomo
     FUZZY_REGEX = /^\s*fuzzy\s*$/
     attr_accessor :msgid, :msgstr, :comment
 
-    def add_text(text,options)
+    def add_text(text, options)
       to = options[:to]
       if to.to_sym == :msgid_plural
         self.msgid = [msgid] unless msgid.is_a? Array

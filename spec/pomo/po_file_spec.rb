@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require File.expand_path("../spec_helper", File.dirname(__FILE__))
 
 include GetPomo
@@ -35,6 +37,16 @@ describe GetPomo::PoFile do
     it "parses comments above msgstr" do
       t = PoFile.parse(%Q(#test\nmsgid "xxx"\n#another\nmsgstr "yyy"))
       t[0].to_hash.should == {:msgid=>'xxx',:msgstr=>'yyy',:comment=>"test\nanother\n"}
+    end
+
+    it "parses escaped quotes correctly" do
+      t = PoFile.parse(%Q(msgid "xxx \\\"quoted\\\""\nmsgstr "yyy \\\"another quoted\\\""))
+      t[0].to_hash.should == {msgid: 'xxx "quoted"', msgstr: 'yyy "another quoted"'}
+    end
+
+    it "parses escaped quotes correctly when using single quotes as delimiter" do
+      t = PoFile.parse(%Q(msgid 'xxx \\\"quoted\\\"'\nmsgstr 'yyy \\\"another quoted\\\"'))
+      t[0].to_hash.should == {msgid: 'xxx \"quoted\"', msgstr: 'yyy \"another quoted\"'}
     end
   end
 
@@ -112,6 +124,22 @@ describe GetPomo::PoFile do
     it "only uses the latest of identicals msgids" do
       text = %Q(msgid "one"\nmsgstr "1"\nmsgid "one"\nmsgstr "001")
       PoFile.to_text(PoFile.parse(text)).should ==  %Q(msgid "one"\nmsgstr "001")
+    end
+  end
+
+  describe :text_from_string do
+    subject { PoFile.new.send(:text_from_string, string) }
+
+    describe "string is wrapped in double quotes" do
+      let(:string) { "\"foo \\\"bar\\\"\"" }
+
+      it { should eql "foo \"bar\"" }
+    end
+
+    describe "string is wrapped in single quotes" do
+      let(:string) { "'foo \\\"bar\\\"'" }
+
+      it { should eql "foo \\\"bar\\\"" }
     end
   end
 end

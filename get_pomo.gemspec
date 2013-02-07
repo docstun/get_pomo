@@ -52,6 +52,8 @@ Gem::Specification.new do |s|
      "spec/pomo/mo_file_spec.rb",
      "spec/pomo/po_file_spec.rb"
   ]
+  s.add_development_dependency('rake')
+  s.add_development_dependency('rspec')
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION

@@ -13,7 +13,7 @@ describe GetPomo::MoFile do
 
   it "reads singulars" do
     t = MoFile.parse(File.read('spec/files/singular.mo'))[0]
-    t.to_hash.should == {:msgid=>'Back',:msgstr=>'Zurück'}
+    t.to_hash.should == {:msgid=>'Back',:msgstr=>"Zur\xC3\xBCck"}
   end
 
   it "reads plurals" do
