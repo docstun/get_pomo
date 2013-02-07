@@ -96,10 +96,10 @@ module GetPomo
     end
 
     def text_from_string(string)
-      if string =~ /^['](.*)[']$/
-        string.scan(/^['](.*)[']$/).first[0]
-      elsif string =~ /^["](.*)["]$/
-        unescaped(string.scan(/^["](.*)["]$/).first[0])
+      if result = string.scan(/^['](.*)[']$/).flatten.first
+        result
+      elsif result = string.scan(/^["](.*)["]$/).flatten.first
+        unescaped(result)
       else
         string
       end
